@@ -1,1 +1,21 @@
-venv/\n__pycache__/\n*.py[cod]\n*.so\n.Python\n*.egg-info/\n.env\n.env.local
+# Python virtual environments and caches
+venv/
+__pycache__/
+
+# Python compiled files and eggs
+*.py[cod]
+*.so
+.Python
+*.egg-info/
+
+# Environment files
+.env
+.env.local
+
+# IDE-specific directories
+.idea/
+.vscode/
+
+# Documentation and logs
+*.log
+*.md
