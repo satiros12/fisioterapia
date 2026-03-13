@@ -24,3 +24,4 @@ This repository implements a comprehensive physiotherapy management system desig
 
 ## Authors
 - Stanislav Vakaruk (@smigaro12)
+
