@@ -1,47 +1,26 @@
-# Documentation
-PLAN DE FISIOTERAPIA
-Se basa en esta página, pero quisiera una para mi o una app :)
-https://ejercicios.sermef.es/#/
+# Proyecto de Fisioterapia Gestión de Planes de Tratamiento
+*Desarrollado por: Stanislav Vakaruk (@smigaro12)*
 
+## Descripción del Proyecto
+Este proyecto se enfoca en crear un sistema informático que permita diseñar, gestionar y ejecutar planes de tratamiento fisiooterapéuticos de forma automatizada y personalizada. Su objetivo es facilitar el seguimiento de pacientes, la planificación de ejercicios terapéuticos y la evaluación del progreso clínico mediante un enfoque basado en protocolos estándar y ajustables según las necesidades del paciente.
 
-La mayoría de tratamientos en la fisioterapia se basan en protocolos que emplean como pauta fundamental el ejercicio terapéutico.
+## Características Principales
+- **Gestión de pacientes**: Registro, actualización y análisis de historias clínicas.
+- **Base de ejercicios**: Catálogo de ejercicios con descripciones, indicaciones y contraindicaciones.
+- **Planificación de tratamientos**: Crear planes paso a paso con ejercicios segmentados por áreas del cuerpo o patologías.
+- **Seguimiento de progreso**: Notación de mejoras, dolor tipo **EVA (Evaluación del Dolor)** y liberación automática de niveles al cumplir condiciones.
+- **Integración con imágenes**: Enlaces a recursos visuales (ej. imágenes de ejercicios o atlas anatómico).
 
-Los ejercicios que se realizan en el tratamiento de cada patología si bien se realizan a criterio del peofesional, hay varios protocolos que se usan para simplificar la ejecusion del tratamiento. 
+## Estructura del Proyecto
+```bash
+/THINKING/
+├── README.md           # Esta documentación
+├── IDEAS.md           # Ideas futuras (ej. app móvil, web)
+├── PLAN.md            # Plan de desarrollo
+└── README_PROJECT.md  # Documentación técnica (a seguir completando)
+```
 
-(No se como seria una clasificacion adecuada pero podria ser tipo) 
-Clasificacion por cuello segmento corporal  y articulación.
- 
-Lo que quiero es poder tener un sistema en el que al abrir el segmento corporal 
-Ejemplo: Columna se despliegue en cervical, lumbar torácica, sacra.
-
-Y en cada zona tener los ejercicios de estiramientos, movilidad activa, fuerza.
-
-Y yo como Fisio poder elegir los items indicados para cada lesión.
-
-Ejemplo: epicondilitis. Y que se despliegue todos los ejercicios del tratamiento y yo poder ir seleccionado el que me parezca más adecuado para cada etapa de evolución de la patologia
-
-El punto es poder explicar de forma detallada cada ejercicio con imágenes para que el paciente siga las instrucciones y vaya haciendo check en la actividad.
-
-COLUMNA 
-- CERVICAL/CUELLO
-Nivel 1
- - - estiramientos 1: Flex, ext, rot iz, rot der, inc iz, inc der.  
-
-Hacer check de dolor con EVA
-( EVA +6 en cualquier ejercicio no permite seguir al siguiente nivel ) 
-
-Al alcanzar el ejercicio sin dolor, desbloquea el siguiente ejercicio (nivel2) 
-- - estiramientos2:movimientos combinados. (Flex rot incl der/izq, ext rot inc der/izq.
-
-Hacer check de dolor con EVA
-( EVA +6 en cualquier ejercicio no permite seguir al siguiente nivel ) 
-
-- - movilidad activa2: imágenes y buenas instrucciones.
- Check
-- - fuerza isométrica: imagen indicación + imagen musculatura activa.
-Ckeck
-- - fuerza excéntrica y ¿aumento progresivo??: imágenes 
-Check Adjuntar calificación EVA para el dolor comparativa 
-
-(Así con cada segmento, también se podría filtrar por patología, y no sé si por músculo.
-Sería genial que al abrir el segmento o la patología se vea en la imagen tipo atlas para que se vea lo que hay que tratar.
+## Estado Actual
+- La base de ejercicios y segmentación por áreas del cuerpo (ej. columna cervical/lumbar) está descrita.
+- Se está desarrollando el sistema de nivelación basada en evaluación del dolor (EVA).
+- Faltan los detalles técnicos de la implementación (donde estará el código).
