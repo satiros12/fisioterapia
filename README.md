@@ -52,4 +52,4 @@ uv add package_name
 See `THINKING/PLAN.md` for current development roadmap and `THINKING/IDEAS.md` for future enhancements.
 
 ## License
-[Add license information here]
+[Add license information here]# Test branch protection
