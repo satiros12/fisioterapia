@@ -18,4 +18,6 @@ __pycache__/
 
 # Documentation and logs
 *.log
-*.md
+*.docx
+*.pptx
+*.html
