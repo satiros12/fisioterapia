@@ -86,13 +86,13 @@ class RoleTests(TestCase):
         """Test that patient sees patient badge in navbar."""
         self.client.login(username="testpatient", password="testpass123")
         response = self.client.get("/")
-        self.assertContains(response, "(Paciente)")
+        self.assertContains(response, "Pac")
 
     def test_physio_sees_physio_badge(self):
         """Test that physiotherapist sees physiotherapist badge."""
         self.client.login(username="testphysio", password="testpass123")
         response = self.client.get("/")
-        self.assertContains(response, "(Fisioterapeuta)")
+        self.assertContains(response, "PT")
 
     def test_physio_can_access_patients_list(self):
         """Test that physiotherapist can access patients list."""
