@@ -1,7 +1,27 @@
 [project]
 name = "fisiotherapy"
 version = "0.1.0"
-description = "Add your description here"
+description = "A physiotherapy application for tracking patient progress and analyzing rehabilitation data"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "django>=5.0",
+    "djangorestframework>=3.14",
+    "numpy>=1.26",
+    "pandas>=2.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-django>=4.5",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["test_*.py"]
