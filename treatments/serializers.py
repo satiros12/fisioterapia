@@ -50,8 +50,8 @@ class TreatmentPlanSerializer(serializers.ModelSerializer):
 
 
 class TreatmentPlanCreateSerializer(serializers.Serializer):
-    patient_id = serializers.IntegerField()
-    name = serializers.CharField()
+    patient_id = serializers.IntegerField(required=False)
+    name = serializers.CharField(required=False)
     description = serializers.CharField(required=False, allow_blank=True)
     start_date = serializers.DateField(required=False, allow_null=True)
     end_date = serializers.DateField(required=False, allow_null=True)

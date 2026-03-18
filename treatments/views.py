@@ -67,6 +67,23 @@ class TreatmentPlanViewSet(viewsets.ModelViewSet):
             TreatmentPlanSerializer(plan).data, status=status.HTTP_201_CREATED
         )
 
+    def partial_update(self, request, pk=None):
+        plan = self.get_object()
+
+        if request.data.get("name"):
+            plan.name = request.data["name"]
+        if "description" in request.data:
+            plan.description = request.data.get("description", "")
+        if "start_date" in request.data:
+            plan.start_date = request.data.get("start_date")
+        if "end_date" in request.data:
+            plan.end_date = request.data.get("end_date")
+        if "is_active" in request.data:
+            plan.is_active = request.data["is_active"]
+
+        plan.save()
+        return Response(TreatmentPlanSerializer(plan).data)
+
     @action(detail=True, methods=["post"])
     def add_exercise(self, request, pk=None):
         plan = self.get_object()
@@ -86,12 +103,21 @@ class TreatmentPlanViewSet(viewsets.ModelViewSet):
                 {"detail": "Exercise not found"}, status=status.HTTP_404_NOT_FOUND
             )
 
+        existing = TreatmentExercise.objects.filter(
+            treatment_plan=plan, exercise_id=exercise_id
+        ).first()
+        if existing:
+            return Response(
+                {"detail": "Exercise already exists in this plan"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         treatment_exercise = TreatmentExercise.objects.create(
             treatment_plan=plan,
             exercise_id=exercise.id,
             exercise_name=exercise.name,
-            assigned_level=level,
-            current_level=level,
+            assigned_level=int(level),
+            current_level=int(level),
             notes=request.data.get("notes", ""),
         )
 

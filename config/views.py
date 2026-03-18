@@ -15,7 +15,11 @@ def index(request):
 
 @login_required
 def exercises_view(request):
-    return render(request, "exercises.html")
+    # Only physiotherapists can view all exercises
+    if hasattr(request.user, "physiotherapist") and request.user.physiotherapist:
+        return render(request, "exercises.html")
+    # Patients are redirected to their calendar
+    return redirect("calendar")
 
 
 @login_required
