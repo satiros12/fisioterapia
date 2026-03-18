@@ -12,6 +12,11 @@ __pycache__/
 .env
 .env.local
 
+# Django
+db.sqlite3
+*.pot
+*.mo
+
 # IDE-specific directories
 .idea/
 .vscode/

@@ -6,6 +6,7 @@ class BodySegment(models.Model):
     name_es = models.CharField(max_length=100, verbose_name="Nombre en español")
     atlas_image = models.ImageField(upload_to="atlas/", blank=True, null=True)
     description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "Body Segment"
