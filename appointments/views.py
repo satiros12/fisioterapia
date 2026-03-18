@@ -48,7 +48,8 @@ class DailyExerciseRecordViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def calendar(self, request):
-        # Get records for a date range
+        from treatments.models import TreatmentPlan, TreatmentExercise
+
         start_date = request.query_params.get("start_date")
         end_date = request.query_params.get("end_date")
 
@@ -58,21 +59,80 @@ class DailyExerciseRecordViewSet(viewsets.ModelViewSet):
         if end_date:
             queryset = queryset.filter(date__lte=end_date)
 
-        # Group by date
         records = queryset.order_by("date")
         calendar_data = {}
+
+        existing_records = {}
         for record in records:
             date_str = str(record.date)
-            if date_str not in calendar_data:
-                calendar_data[date_str] = []
-            calendar_data[date_str].append(
-                {
-                    "id": record.id,
-                    "exercise_name": record.exercise_name,
-                    "status": record.status,
-                    "treatment_exercise_id": record.treatment_exercise_id,
-                }
-            )
+            if date_str not in existing_records:
+                existing_records[date_str] = {}
+            existing_records[date_str][record.treatment_exercise_id] = {
+                "id": record.id,
+                "exercise_name": record.exercise_name,
+                "status": record.status,
+                "treatment_exercise_id": record.treatment_exercise_id,
+                "comments": record.comments,
+            }
+
+        user = request.user
+        if not (hasattr(user, "physiotherapist") and user.physiotherapist):
+            treatment_plans = TreatmentPlan.objects.filter(patient=user, is_active=True)
+            plan_exercises = TreatmentExercise.objects.filter(
+                treatment_plan__in=treatment_plans
+            ).select_related("treatment_plan")
+
+            current_date = start_date or str(timezone.now().date())
+            end = end_date or str(timezone.now().date() + timedelta(days=30))
+
+            from datetime import datetime
+
+            try:
+                start_dt = datetime.strptime(current_date, "%Y-%m-%d").date()
+                end_dt = datetime.strptime(end, "%Y-%m-%d").date()
+
+                delta = end_dt - start_dt
+                for i in range(delta.days + 1):
+                    date = start_dt + timedelta(days=i)
+                    date_str = str(date)
+
+                    if date_str not in calendar_data:
+                        calendar_data[date_str] = []
+
+                    for ex in plan_exercises:
+                        if (
+                            date_str in existing_records
+                            and ex.id in existing_records[date_str]
+                        ):
+                            calendar_data[date_str].append(
+                                existing_records[date_str][ex.id]
+                            )
+                        else:
+                            calendar_data[date_str].append(
+                                {
+                                    "id": None,
+                                    "exercise_name": ex.exercise_name,
+                                    "status": "nothing",
+                                    "treatment_exercise_id": ex.id,
+                                    "comments": "",
+                                }
+                            )
+            except:
+                pass
+        else:
+            for record in records:
+                date_str = str(record.date)
+                if date_str not in calendar_data:
+                    calendar_data[date_str] = []
+                calendar_data[date_str].append(
+                    {
+                        "id": record.id,
+                        "exercise_name": record.exercise_name,
+                        "status": record.status,
+                        "treatment_exercise_id": record.treatment_exercise_id,
+                        "comments": record.comments,
+                    }
+                )
 
         return Response(calendar_data)
 
