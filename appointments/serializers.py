@@ -54,6 +54,7 @@ class DailyExerciseRecordCreateSerializer(serializers.Serializer):
 
 class ProfessionalScheduleSerializer(serializers.ModelSerializer):
     day_name = serializers.CharField(source="get_day_of_week_display", read_only=True)
+    day_of_week = serializers.IntegerField(min_value=0, max_value=6)
 
     class Meta:
         model = ProfessionalSchedule
@@ -69,6 +70,8 @@ class ProfessionalScheduleSerializer(serializers.ModelSerializer):
 
 
 class DayOffSerializer(serializers.ModelSerializer):
+    date = serializers.DateField()
+
     class Meta:
         model = DayOff
         fields = ["id", "physiotherapist", "date", "reason"]
