@@ -3,9 +3,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Avg
+from django.contrib.auth.models import User
 from .models import TreatmentPlan, TreatmentExercise, ExerciseSession, LevelProgression
 from .serializers import (
     TreatmentPlanSerializer,
+    TreatmentPlanCreateSerializer,
     TreatmentExerciseSerializer,
     ExerciseSessionSerializer,
     LevelProgressionSerializer,
@@ -20,9 +22,16 @@ class TreatmentPlanViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        user = self.request.user
         queryset = TreatmentPlan.objects.select_related(
             "patient", "physiotherapist"
         ).all()
+
+        if hasattr(user, "physiotherapist") and user.physiotherapist:
+            pass
+        else:
+            queryset = queryset.filter(patient=user)
+
         patient_id = self.request.query_params.get("patient_id")
         if patient_id:
             queryset = queryset.filter(patient_id=patient_id)
@@ -30,6 +39,33 @@ class TreatmentPlanViewSet(viewsets.ModelViewSet):
         if is_active is not None:
             queryset = queryset.filter(is_active=is_active.lower() == "true")
         return queryset
+
+    def create(self, request):
+        from .serializers import TreatmentPlanCreateSerializer
+
+        serializer = TreatmentPlanCreateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        data = serializer.validated_data
+        try:
+            patient = User.objects.get(id=data["patient_id"])
+        except User.DoesNotExist:
+            return Response({"detail": "Patient not found"}, status=404)
+
+        plan = TreatmentPlan.objects.create(
+            patient=patient,
+            physiotherapist=request.user,
+            name=data["name"],
+            description=data.get("description", ""),
+            start_date=data.get("start_date"),
+            end_date=data.get("end_date"),
+            is_active=True,
+        )
+
+        return Response(
+            TreatmentPlanSerializer(plan).data, status=status.HTTP_201_CREATED
+        )
 
     @action(detail=True, methods=["post"])
     def add_exercise(self, request, pk=None):

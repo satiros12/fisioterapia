@@ -29,6 +29,8 @@ class TreatmentPlanSerializer(serializers.ModelSerializer):
             "physiotherapist_name",
             "name",
             "description",
+            "start_date",
+            "end_date",
             "is_active",
             "exercises_count",
             "created_at",
@@ -45,6 +47,14 @@ class TreatmentPlanSerializer(serializers.ModelSerializer):
 
     def get_exercises_count(self, obj):
         return obj.exercises.count()
+
+
+class TreatmentPlanCreateSerializer(serializers.Serializer):
+    patient_id = serializers.IntegerField()
+    name = serializers.CharField()
+    description = serializers.CharField(required=False, allow_blank=True)
+    start_date = serializers.DateField(required=False, allow_null=True)
+    end_date = serializers.DateField(required=False, allow_null=True)
 
 
 class TreatmentExerciseSerializer(serializers.ModelSerializer):

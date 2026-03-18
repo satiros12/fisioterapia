@@ -20,6 +20,8 @@ def exercises_view(request):
 
 @login_required
 def treatment_plans_view(request):
+    if hasattr(request.user, "physiotherapist") and request.user.physiotherapist:
+        return render(request, "treatment_plans_manage.html")
     return render(request, "treatment_plans.html")
 
 
