@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from .models import (
     BodySegment,
     BodySubSegment,
@@ -23,11 +24,13 @@ from .serializers import (
 class BodySegmentViewSet(viewsets.ModelViewSet):
     queryset = BodySegment.objects.all()
     serializer_class = BodySegmentSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class BodySubSegmentViewSet(viewsets.ModelViewSet):
     queryset = BodySubSegment.objects.all()
     serializer_class = BodySubSegmentSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = BodySubSegment.objects.select_related("segment").all()
@@ -40,16 +43,19 @@ class BodySubSegmentViewSet(viewsets.ModelViewSet):
 class ExerciseCategoryViewSet(viewsets.ModelViewSet):
     queryset = ExerciseCategory.objects.all()
     serializer_class = ExerciseCategorySerializer
+    permission_classes = [IsAuthenticated]
 
 
 class PathologyViewSet(viewsets.ModelViewSet):
     queryset = Pathology.objects.all()
     serializer_class = PathologySerializer
+    permission_classes = [IsAuthenticated]
 
 
 class MuscleViewSet(viewsets.ModelViewSet):
     queryset = Muscle.objects.all()
     serializer_class = MuscleSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class ExerciseViewSet(viewsets.ModelViewSet):
@@ -57,6 +63,7 @@ class ExerciseViewSet(viewsets.ModelViewSet):
         "sub_segment", "sub_segment__segment", "category"
     )
     serializer_class = ExerciseSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.action == "list":

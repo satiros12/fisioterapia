@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import redirect
 import json
 
 
@@ -24,6 +26,28 @@ def treatment_plans_view(request):
 @login_required
 def exercise_detail_view(request, exercise_id):
     return render(request, "exercise_detail.html", {"exercise_id": exercise_id})
+
+
+@login_required
+def calendar_view(request):
+    # If physiotherapist, show patient's calendar view, else show own calendar
+    if hasattr(request.user, "physiotherapist") and request.user.physiotherapist:
+        return render(request, "calendar_physio.html")
+    return render(request, "calendar.html")
+
+
+@login_required
+def schedule_view(request):
+    # If physiotherapist, show schedule management, else show booking
+    if hasattr(request.user, "physiotherapist") and request.user.physiotherapist:
+        return render(request, "schedule_manage.html")
+    return render(request, "schedule_booking.html")
+
+
+@login_required
+def appointments_view(request):
+    # If physiotherapist, show all appointments, else show own
+    return render(request, "appointments.html")
 
 
 @csrf_exempt

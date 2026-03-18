@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from django.db.models import Avg
 from .models import TreatmentPlan, TreatmentExercise, ExerciseSession, LevelProgression
 from .serializers import (
@@ -16,6 +17,7 @@ from exercises.models import Exercise
 class TreatmentPlanViewSet(viewsets.ModelViewSet):
     queryset = TreatmentPlan.objects.all()
     serializer_class = TreatmentPlanSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = TreatmentPlan.objects.select_related(
@@ -85,6 +87,7 @@ class TreatmentPlanViewSet(viewsets.ModelViewSet):
 class TreatmentExerciseViewSet(viewsets.ModelViewSet):
     queryset = TreatmentExercise.objects.all()
     serializer_class = TreatmentExerciseSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = TreatmentExercise.objects.select_related("treatment_plan").all()
@@ -224,6 +227,7 @@ class TreatmentExerciseViewSet(viewsets.ModelViewSet):
 class ExerciseSessionViewSet(viewsets.ModelViewSet):
     queryset = ExerciseSession.objects.all()
     serializer_class = ExerciseSessionSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = ExerciseSession.objects.select_related("treatment_exercise").all()
@@ -236,3 +240,4 @@ class ExerciseSessionViewSet(viewsets.ModelViewSet):
 class LevelProgressionViewSet(viewsets.ModelViewSet):
     queryset = LevelProgression.objects.all()
     serializer_class = LevelProgressionSerializer
+    permission_classes = [IsAuthenticated]

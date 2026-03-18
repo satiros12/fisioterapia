@@ -10,7 +10,7 @@ from .serializers import PatientSerializer, PhysiotherapistSerializer, UserSeria
 class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Patient.objects.select_related("user").all()
@@ -35,7 +35,7 @@ class PatientViewSet(viewsets.ModelViewSet):
 class PhysiotherapistViewSet(viewsets.ModelViewSet):
     queryset = Physiotherapist.objects.all()
     serializer_class = PhysiotherapistSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Physiotherapist.objects.select_related("user").all()

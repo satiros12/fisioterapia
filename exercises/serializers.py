@@ -103,7 +103,21 @@ class ExerciseSerializer(serializers.ModelSerializer):
 class ExerciseListSerializer(serializers.ModelSerializer):
     category_name_es = serializers.CharField(source="category.name_es", read_only=True)
     level_name = serializers.CharField(source="get_level_display", read_only=True)
+    reference_image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Exercise
-        fields = ["id", "name", "category_name_es", "level", "level_name"]
+        fields = [
+            "id",
+            "name",
+            "description",
+            "category_name_es",
+            "level",
+            "level_name",
+            "reference_image_url",
+        ]
+
+    def get_reference_image_url(self, obj):
+        if obj.reference_image:
+            return obj.reference_image.url
+        return None
