@@ -16,6 +16,8 @@ class TreatmentPlan(models.Model):
     )
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

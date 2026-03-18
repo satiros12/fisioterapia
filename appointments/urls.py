@@ -5,6 +5,7 @@ from .views import (
     ProfessionalScheduleViewSet,
     DayOffViewSet,
     AppointmentViewSet,
+    MessageViewSet,
 )
 
 router = DefaultRouter()
@@ -14,6 +15,7 @@ router.register(
 router.register(r"schedule", ProfessionalScheduleViewSet, basename="schedule")
 router.register(r"days-off", DayOffViewSet, basename="daysoff")
 router.register(r"appointments", AppointmentViewSet, basename="appointment")
+router.register(r"messages", MessageViewSet, basename="message")
 
 urlpatterns = [
     path("", include(router.urls)),

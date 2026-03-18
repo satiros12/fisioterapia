@@ -10,6 +10,7 @@ from .views import (
     calendar_view,
     schedule_view,
     appointments_view,
+    messages_view,
 )
 
 urlpatterns = [
@@ -26,6 +27,7 @@ urlpatterns = [
     path("calendario", calendar_view, name="calendar"),
     path("horario", schedule_view, name="schedule"),
     path("citas", appointments_view, name="appointments"),
+    path("mensajes", messages_view, name="messages"),
 ]
 
 if settings.DEBUG:

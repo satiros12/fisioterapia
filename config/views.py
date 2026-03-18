@@ -50,6 +50,11 @@ def appointments_view(request):
     return render(request, "appointments.html")
 
 
+@login_required
+def messages_view(request):
+    return render(request, "messages.html")
+
+
 @csrf_exempt
 @require_http_methods(["GET", "POST"])
 def api_proxy(request, path):

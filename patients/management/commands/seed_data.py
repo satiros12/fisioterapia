@@ -28,6 +28,8 @@ class Command(BaseCommand):
             last_name="Pérez",
             email="juan@example.com",
         )
+        patient_user.set_password("test123456")
+        patient_user.save()
         Patient.objects.create(user=patient_user, age=35, condition="Lumbago crónico")
 
         physio_user = User.objects.create_user(
@@ -37,6 +39,8 @@ class Command(BaseCommand):
             last_name="Martínez",
             email="martinez@fisioterapia.com",
         )
+        physio_user.set_password("test123456")
+        physio_user.save()
         Physiotherapist.objects.create(user=physio_user, license_number="COL-12345")
 
         column_segment, _ = BodySegment.objects.get_or_create(

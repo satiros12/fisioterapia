@@ -7,6 +7,7 @@ from .models import (
     DayOff,
     Appointment,
     AppointmentStatus,
+    Message,
 )
 
 
@@ -110,3 +111,34 @@ class AppointmentCreateSerializer(serializers.Serializer):
     start_time = serializers.TimeField()
     end_time = serializers.TimeField()
     patient_notes = serializers.CharField(required=False, allow_blank=True)
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    sender_name = serializers.SerializerMethodField()
+    recipient_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Message
+        fields = [
+            "id",
+            "sender",
+            "sender_name",
+            "recipient",
+            "recipient_name",
+            "subject",
+            "body",
+            "is_read",
+            "created_at",
+        ]
+
+    def get_sender_name(self, obj):
+        return obj.sender.get_full_name() or obj.sender.username
+
+    def get_recipient_name(self, obj):
+        return obj.recipient.get_full_name() or obj.recipient.username
+
+
+class MessageCreateSerializer(serializers.Serializer):
+    recipient_id = serializers.IntegerField()
+    subject = serializers.CharField()
+    body = serializers.CharField()

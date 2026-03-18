@@ -11,6 +11,7 @@ from .models import (
     DayOff,
     Appointment,
     AppointmentStatus,
+    Message,
 )
 from .serializers import (
     DailyExerciseRecordSerializer,
@@ -19,6 +20,7 @@ from .serializers import (
     DayOffSerializer,
     AppointmentSerializer,
     AppointmentCreateSerializer,
+    MessageSerializer,
 )
 
 
@@ -258,3 +260,62 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         return Response(
             AppointmentSerializer(appointment).data, status=status.HTTP_201_CREATED
         )
+
+
+class MessageViewSet(viewsets.ModelViewSet):
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        action = self.action
+
+        if action == "list":
+            inbox = self.request.query_params.get("inbox")
+            if inbox == "true":
+                return Message.objects.filter(recipient=user).order_by("-created_at")
+            sent = self.request.query_params.get("sent")
+            if sent == "true":
+                return Message.objects.filter(sender=user).order_by("-created_at")
+            return Message.objects.filter(sender=user) | Message.objects.filter(
+                recipient=user
+            )
+
+        return Message.objects.filter(sender=user) | Message.objects.filter(
+            recipient=user
+        )
+
+    def create(self, request):
+        from .serializers import MessageCreateSerializer
+
+        serializer = MessageCreateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        data = serializer.validated_data
+        try:
+            recipient = User.objects.get(id=data["recipient_id"])
+        except User.DoesNotExist:
+            return Response({"detail": "Recipient not found"}, status=404)
+
+        message = Message.objects.create(
+            sender=request.user,
+            recipient=recipient,
+            subject=data["subject"],
+            body=data["body"],
+        )
+
+        return Response(MessageSerializer(message).data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=["post"])
+    def mark_read(self, request, pk=None):
+        message = self.get_object()
+        if message.recipient == request.user:
+            message.is_read = True
+            message.save()
+        return Response(MessageSerializer(message).data)
+
+    @action(detail=False, methods=["get"])
+    def unread_count(self, request):
+        count = Message.objects.filter(recipient=request.user, is_read=False).count()
+        return Response({"unread_count": count})
