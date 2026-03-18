@@ -6,6 +6,7 @@ from .views import index, exercises_view, treatment_plans_view, exercise_detail_
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("accounts/", include("accounts.urls")),
     path("api/", include("patients.urls")),
     path("api/", include("exercises.urls")),
     path("api/", include("treatments.urls")),
